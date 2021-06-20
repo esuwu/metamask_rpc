@@ -11,10 +11,9 @@ import (
 )
 
 var RPC = struct {
-	MetaMask struct{ Multiply, Eth_blockNumber, Net_version, Eth_getBalance, Eth_getBlockByNumber string }
+	MetaMask struct{ Eth_blockNumber, Net_version, Eth_getBalance, Eth_getBlockByNumber string }
 }{
-	MetaMask: struct{ Multiply, Eth_blockNumber, Net_version, Eth_getBalance, Eth_getBlockByNumber string }{
-		Multiply:             "multiply",
+	MetaMask: struct{ Eth_blockNumber, Net_version, Eth_getBalance, Eth_getBlockByNumber string }{
 		Eth_blockNumber:      "eth_blocknumber",
 		Net_version:          "net_version",
 		Eth_getBalance:       "eth_getbalance",
@@ -26,28 +25,6 @@ func (MetaMask) SMD() smd.ServiceInfo {
 	return smd.ServiceInfo{
 		Description: ``,
 		Methods: map[string]smd.Service{
-			"Multiply": {
-				Description: `Multiply multiples two digits and returns result.`,
-				Parameters: []smd.JSONSchema{
-					{
-						Name:        "a",
-						Optional:    false,
-						Description: ``,
-						Type:        smd.Integer,
-					},
-					{
-						Name:        "b",
-						Optional:    false,
-						Description: ``,
-						Type:        smd.Integer,
-					},
-				},
-				Returns: smd.JSONSchema{
-					Description: ``,
-					Optional:    false,
-					Type:        smd.Integer,
-				},
-			},
 			"Eth_blockNumber": {
 				Description: ``,
 				Parameters:  []smd.JSONSchema{},
@@ -120,26 +97,6 @@ func (s MetaMask) Invoke(ctx context.Context, method string, params json.RawMess
 	var err error
 
 	switch method {
-	case RPC.MetaMask.Multiply:
-		var args = struct {
-			A int `json:"a"`
-			B int `json:"b"`
-		}{}
-
-		if zenrpc.IsArray(params) {
-			if params, err = zenrpc.ConvertToObject([]string{"a", "b"}, params); err != nil {
-				return zenrpc.NewResponseError(nil, zenrpc.InvalidParams, "", err.Error())
-			}
-		}
-
-		if len(params) > 0 {
-			if err := json.Unmarshal(params, &args); err != nil {
-				return zenrpc.NewResponseError(nil, zenrpc.InvalidParams, "", err.Error())
-			}
-		}
-
-		resp.Set(s.Multiply(args.A, args.B))
-
 	case RPC.MetaMask.Eth_blockNumber:
 		resp.Set(s.Eth_blockNumber())
 
