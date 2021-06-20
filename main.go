@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -13,11 +12,9 @@ import (
 type MetaMask struct{ zenrpc.Service }
 
 func (as MetaMask) Eth_blockNumber() int {
-	fmt.Println("gotcha")
 	return 5
 }
 func (as MetaMask) Net_version() int {
-	fmt.Println("gotcha")
 	return 3
 }
 
